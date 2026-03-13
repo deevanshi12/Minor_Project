@@ -1,0 +1,53 @@
+body{
+font-family:Arial;
+background:#f0f4f8;
+margin:0;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+}
+
+.login-container{
+background:white;
+padding:40px;
+border-radius:10px;
+box-shadow:0 5px 20px rgba(0,0,0,0.2);
+text-align:center;
+}
+
+.dashboard{
+width:700px;
+}
+
+.card{
+background:white;
+padding:25px;
+margin:20px 0;
+border-radius:10px;
+box-shadow:0 5px 20px rgba(0,0,0,0.1);
+}
+
+input{
+width:100%;
+padding:10px;
+margin:10px 0;
+}
+
+button{
+background:#4f46e5;
+color:white;
+border:none;
+padding:10px;
+width:100%;
+border-radius:6px;
+cursor:pointer;
+}
+
+.result-box{
+background:white;
+padding:40px;
+border-radius:10px;
+box-shadow:0 5px 20px rgba(0,0,0,0.2);
+text-align:center;
+}
