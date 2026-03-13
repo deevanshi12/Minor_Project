@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>MindGuard Login</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<div class="login-container">
+
+<h2>MindGuard</h2>
+
+<form action="/dashboard" method="POST">
+
+<input type="text" name="name" placeholder="Enter your name" required>
+
+<button type="submit">Enter Dashboard</button>
+
+</form>
+
+</div>
+
+</body>
+</html>
