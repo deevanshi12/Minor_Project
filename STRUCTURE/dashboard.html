@@ -1,11 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-
-<title>Dashboard</title>
+<title>MindGuard Dashboard</title>
 
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 </head>
@@ -14,32 +12,27 @@
 
 <div class="dashboard">
 
-<h1>Welcome {{name}}</h1>
+<h1>MindGuard</h1>
+<p>Welcome {{name}}. Monitor and improve your mental well-being.</p>
 
 <div class="card">
-
-<h2>Weekly Mood</h2>
-
-<canvas id="chart"></canvas>
-
+  <h2>Weekly Mood Overview</h2>
+  <canvas id="chart"></canvas>
 </div>
 
 <div class="card">
+  <h2>Self Assessment</h2>
+  <p>Evaluate your mental health using a structured questionnaire.</p>
+  <a href="/questionnaire"><button>Start Assessment</button></a>
+</div>
 
-<h2>Daily Check-In</h2>
+<div class="card">
+  <h2>AI Support Assistant</h2>
 
-<form action="/result" method="POST">
+  <div id="chatBox" class="chat-box"></div>
 
-<label>Stress Level</label>
-<input type="number" name="stress" min="1" max="10" required>
-
-<label>Sleep Hours</label>
-<input type="number" name="sleep" min="1" max="12" required>
-
-<button type="submit">Analyze</button>
-
-</form>
-
+  <input type="text" id="userInput" placeholder="Describe how you are feeling...">
+  <button onclick="sendMessage()">Send</button>
 </div>
 
 </div>

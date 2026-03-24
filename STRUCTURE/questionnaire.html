@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Assessment</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="dashboard">
+
+<h1>Mental Health Assessment</h1>
+
+<form action="/result" method="POST">
+
+<div class="card">
+<h2>Basic Health</h2>
+
+<label>Stress Level</label>
+<input type="number" name="stress" min="1" max="10" required>
+
+<label>Sleep Hours</label>
+<input type="number" name="sleep" required>
+
+<label>Energy Level</label>
+<input type="number" name="energy" min="1" max="10" required>
+</div>
+
+<div class="card">
+<h2>Mental State</h2>
+
+<label>Stress Frequency</label>
+<select name="stress_freq">
+<option value="1">Rarely</option>
+<option value="2">Sometimes</option>
+<option value="3">Often</option>
+<option value="4">Always</option>
+</select>
+
+<label>Anxiety</label>
+<select name="anxiety">
+<option value="1">Low</option>
+<option value="2">Moderate</option>
+<option value="3">High</option>
+</select>
+
+<label>Feeling Overwhelmed</label>
+<select name="overwhelm">
+<option value="1">No</option>
+<option value="2">Sometimes</option>
+<option value="3">Yes</option>
+</select>
+</div>
+
+<div class="card">
+<h2>Lifestyle</h2>
+
+<label>Social Interaction</label>
+<select name="social">
+<option value="1">Active</option>
+<option value="2">Average</option>
+<option value="3">Isolated</option>
+</select>
+
+<label>Exercise</label>
+<select name="exercise">
+<option value="1">Regularly</option>
+<option value="2">Sometimes</option>
+<option value="3">Rarely</option>
+</select>
+
+<label>Screen Time</label>
+<input type="number" name="screen" required>
+</div>
+
+<button type="submit">Analyze</button>
+
+</form>
+
+</div>
+
+</body>
+</html>
