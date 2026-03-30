@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MindGuard | The Pressure Valve</title>
+    <style>
+        body { margin: 0; background: #020617; color: #3b82f6; font-family: 'Plus Jakarta Sans', sans-serif; overflow: hidden; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        canvas { position: absolute; top: 0; left: 0; pointer-events: none; }
+        .content { z-index: 10; text-align: center; width: 80%; }
+        h1 { letter-spacing: 5px; opacity: 0.6; font-size: 14px; text-transform: uppercase; }
+        textarea { 
+            background: transparent; border: none; color: #fff; font-size: 32px; 
+            text-align: center; width: 100%; outline: none; resize: none; 
+            font-weight: 800; caret-color: #2dd4bf;
+        }
+        .hint { color: #1e293b; margin-top: 20px; font-size: 12px; }
+        .release-trigger { 
+            margin-top: 40px; padding: 15px 40px; border: 1px solid #1e293b; 
+            border-radius: 50px; cursor: pointer; color: #94a3b8; transition: 0.3s;
+        }
+        .release-trigger:hover { border-color: #3b82f6; color: #fff; box-shadow: 0 0 20px rgba(59, 130, 246, 0.2); }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div class="content">
+        <h1>Deposit Your Burden</h1>
+        <textarea id="ventInput" rows="2" placeholder="Start typing..."></textarea>
+        <div class="release-trigger" onclick="shatterEverything()">RELEASE INTO THE VOID</div>
+        <div class="hint">Your words are never saved. They exist only until they shatter.</div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const input = document.getElementById('ventInput');
+        let particles = [];
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        class Particle {
+            constructor(x, y) {
+                this.x = x; this.y = y;
+                this.size = Math.random() * 3 + 1;
+                this.speedX = Math.random() * 6 - 3;
+                this.speedY = Math.random() * -6;
+                this.opacity = 1;
+            }
+            update() {
+                this.x += this.speedX; this.y += this.speedY;
+                if (this.opacity > 0.02) this.opacity -= 0.015;
+            }
+            draw() {
+                ctx.fillStyle = `rgba(59, 130, 246, ${this.opacity})`;
+                ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
+            }
+        }
+
+        function shatterEverything() {
+            const rect = input.getBoundingClientRect();
+            for(let i=0; i<150; i++) {
+                particles.push(new Particle(rect.left + Math.random()*rect.width, rect.top + Math.random()*rect.height));
+            }
+            input.value = "";
+            input.style.filter = "blur(10px)";
+            setTimeout(() => input.style.filter = "blur(0px)", 500);
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach((p, index) => {
+                p.update(); p.draw();
+                if(p.opacity <= 0.02) particles.splice(index, 1);
+            });
+            requestAnimationFrame(animate);
+        }
+        animate();
+    </script>
+</body>
+</html>
