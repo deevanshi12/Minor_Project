@@ -1,20 +1,95 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>MindGuard Login</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MindGuard — Sign In</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-
 <body>
 
-<div class="login-container">
-  <h2>MindGuard 🧠</h2>
-  <p>Your AI Mental Health Support System</p>
+<div class="login-page">
 
-  <form action="/dashboard" method="POST">
-    <input type="text" name="name" placeholder="Enter your name" required>
-    <button type="submit">Enter Dashboard</button>
-  </form>
+  <!-- LEFT: Branding -->
+  <div class="login-left">
+    <div class="login-grid-lines"></div>
+
+    <div class="login-brand">MindGuard</div>
+
+    <h1 class="login-headline">
+      Your mental<br>
+      health <em>matters.</em>
+    </h1>
+
+    <p class="login-sub">
+      AI-powered early risk detection and personalized mental wellness support — built for students, by people who care.
+    </p>
+
+    <div class="login-stats">
+      <div class="stat-item">
+        <div class="stat-num">98%</div>
+        <div class="stat-label">Accuracy</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">24/7</div>
+        <div class="stat-label">AI Support</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">100%</div>
+        <div class="stat-label">Private</div>
+      </div>
+    </div>
+
+    <!-- Floating badge -->
+    <div style="position:absolute; bottom:48px; left:64px; background:rgba(14,230,183,0.1); border:1px solid rgba(14,230,183,0.2); border-radius:16px; padding:16px 20px; display:flex; align-items:center; gap:12px; z-index:2;">
+      <div style="width:10px;height:10px;border-radius:50%;background:#0ee6b7;flex-shrink:0;animation:pulse-dot 2s ease-in-out infinite;"></div>
+      <div>
+        <div style="font-size:13px;font-weight:600;color:#e8f0fe;">Real-time AI monitoring</div>
+        <div style="font-size:11px;color:#6b7fa3;">Early risk detection active</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: Form -->
+  <div class="login-right">
+    <div class="login-form-box">
+      <h2>Welcome back</h2>
+      <p>Enter your name to access your personal dashboard.</p>
+
+      <form action="/dashboard" method="POST">
+        <div class="form-group">
+          <label class="form-label">Your Name</label>
+          <input
+            type="text"
+            name="name"
+            class="form-input"
+            placeholder="e.g. Priya Sharma"
+            required
+            autocomplete="off"
+          >
+        </div>
+
+        <button type="submit" class="btn-primary">
+          Enter Dashboard →
+        </button>
+      </form>
+
+      <p class="login-disclaimer">
+        🔒 Your data is never stored or shared.<br>
+        This tool is for personal awareness only — not a clinical diagnosis.
+      </p>
+
+      <div style="margin-top:40px; padding-top:32px; border-top:1px solid rgba(255,255,255,0.07);">
+        <p style="font-size:12px; color:#3a4a65; text-align:center;">Not a substitute for professional care.</p>
+        <p style="font-size:12px; color:#3a4a65; text-align:center; margin-top:4px;">
+          Crisis support: <a href="tel:988" style="color:#0ee6b7; text-decoration:none;">988</a> (Lifeline)
+        </p>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 </body>

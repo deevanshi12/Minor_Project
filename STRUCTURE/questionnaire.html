@@ -1,409 +1,204 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MindGuard | Clinical Mental Health Scope</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #00a884;
-            --primary-dark: #008f6f;
-            --text-main: #1e293b;
-            --text-muted: #64748b;
-            --border: #e2e8f0;
-            --bg-light: #f8fafc;
-        }
-
-        * { box-sizing: border-box; transition: all 0.3s ease; }
-        body, html { margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; background: white; color: var(--text-main); overflow-x: hidden; }
-
-        /* --- NAVIGATION --- */
-        nav {
-    position: absolute; /* This prevents the nav from 'pushing' the image */
-    top: 0; 
-    width: 100%; 
-    z-index: 100;
-    padding: 20px 0;
-    background: transparent; /* Removes any solid background color */
-}
-        .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; padding: 0 40px; align-items: center; }
-        .logo { color: white; font-weight: 800; font-size: 24px; text-decoration: none; letter-spacing: -1px; }
-        .nav-links a { color: white; text-decoration: none; font-size: 14px; margin-left: 30px; font-weight: 700; opacity: 0.9; }
-
-        /* --- HERO: TEXT AT BOTTOM FOR IMAGE VISIBILITY --- */
-       .hero {
-    position: relative;
-    width: 100%;
-    height: 100vh;
-    /* We move the image 'focal point' to the very top (0%) to keep the face high */
-    background: url('https://questbehavioralhealth.com/wp-content/uploads/2025/09/2bf522b8-69f7-4283-a320-df62d020049e.jpg') no-repeat center 0%;
-    background-size: cover;
-    display: flex;
-    /* Force the content to the bottom */
-    align-items: flex-end; 
-    justify-content: center;
-    /* Increase this value to push text up from the bottom edge slightly */
-    padding-bottom: 40px; 
-}
-
-.hero-content {
-    position: relative;
-    z-index: 2;
-    text-align: center;
-    /* We narrow the width so the text stays in the center 'desk' area */
-    max-width: 700px; 
-    color: white;
-    /* This margin-bottom is the most important—it keeps the text low */
-    margin-bottom: 20px; 
-}
-
-.hero h1 {
-    /* Shrinking the font size is the only way to stop it from hitting the face */
-    font-size: 2.8rem; 
-    font-weight: 800;
-    line-height: 1.1;
-    margin-bottom: 20px;
-    text-shadow: 0 4px 15px rgba(0,0,0,0.6);
-}
-
-.hero-note {
-    font-size: 13px;
-    max-width: 500px;
-    margin: 20px auto 0;
-    line-height: 1.4;
-}
-
-
-
-
-        .hero-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.2); }
-        .hero-content { position: relative; z-index: 2; text-align: center; max-width: 800px; color: white; }
-        .hero h1 { font-size: 4rem; font-weight: 800; margin-bottom: 25px; text-shadow: 0 4px 25px rgba(0,0,0,0.4); }
-        .btn-main {
-            background: white; color: var(--primary); border: none; padding: 22px 60px;
-            border-radius: 100px; font-weight: 800; font-size: 18px; cursor: pointer;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-        .btn-main:hover { transform: translateY(-5px); }
-        .hero-note { margin-top: 25px; font-size: 14px; opacity: 0.9; font-style: italic; max-width: 600px; margin-left: auto; margin-right: auto; line-height: 1.5; }
-
-        /* --- ASSESSMENT AREA (HIDDEN BY DEFAULT) --- */
-        #assessment-area { display: none; }
-        .curve-sep {
-            background: var(--primary); color: white; padding: 100px 20px; text-align: center;
-            border-radius: 50% 50% 0 0 / 12% 12% 0 0; margin-top: -60px; position: relative; z-index: 10;
-        }
-
-        .container { max-width: 750px; margin: 0 auto; padding: 60px 20px; min-height: 500px; }
-        .q-card {
-            background: white; padding: 50px; border-radius: 35px; border: 1px solid var(--border);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.04);
-        }
-        .q-step { display: none; }
-        .q-step.active { display: block; animation: slideIn 0.5s ease; }
-        @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-        .opt-btn {
-            display: block; width: 100%; padding: 20px; background: var(--bg-light);
-            border: 2px solid transparent; border-radius: 18px; margin-top: 15px;
-            cursor: pointer; font-weight: 700; text-align: left; font-size: 16px; color: var(--text-main);
-        }
-        .opt-btn:hover { border-color: var(--primary); background: #eefdf9; transform: translateX(5px); }
-
-        /* --- DETAILED REPORT SECTION --- */
-        #report-screen { display: none; }
-        .report-header { text-align: center; margin-bottom: 50px; }
-        .score-circle {
-            width: 150px; height: 150px; border-radius: 50%; border: 10px solid var(--primary);
-            display: flex; align-items: center; justify-content: center; font-size: 48px;
-            font-weight: 800; margin: 0 auto 20px; color: var(--primary);
-        }
-        .report-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .report-item { background: var(--bg-light); padding: 30px; border-radius: 25px; border: 1px solid var(--border); }
-        .report-item h5 { margin: 0 0 10px; color: var(--primary); font-size: 13px; text-transform: uppercase; letter-spacing: 1px; }
-        .report-item p { margin: 0; font-size: 15px; line-height: 1.6; color: var(--text-main); }
-
-        /* --- FOOTER --- */
-        footer { background: #0f172a; color: #94a3b8; padding: 100px 40px 40px; margin-top: 100px; }
-        .footer-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 50px; }
-        .f-col h4 { color: white; margin-bottom: 25px; font-size: 14px; text-transform: uppercase; letter-spacing: 1.5px; }
-        .f-col p, .f-col a { font-size: 14px; line-height: 1.8; color: #94a3b8; text-decoration: none; display: block; margin-bottom: 12px; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MindGuard — Mental Health Assessment</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 
-    <nav>
-        <div class="nav-container">
-            <a href="#" class="logo">MindGuard</a>
-            <div class="nav-links">
-                <a href="#about">About</a>
-                <a href="#faq">FAQ</a>
-                <a href="#services">Services</a>
-            </div>
-        </div>
-    </nav>
+<!-- NAV -->
+<nav class="nav">
+  <a href="/dashboard" class="nav-logo">
+    <div class="nav-logo-dot"></div>
+    MindGuard
+  </a>
+  <ul class="nav-links">
+    <li><a href="/dashboard">← Back to Dashboard</a></li>
+    <li><a href="/assistant">Pressure Valve</a></li>
+  </ul>
+</nav>
 
-    <section class="hero">
-        <div class="hero-overlay"></div>
-        <div class="hero-content">
-            <h1>Check Your Mental Health Scope</h1>
-            <button class="btn-main" onclick="revealTest()">OPEN QUESTIONNAIRE →</button>
-            <p class="hero-note">Our online questionnaire will help you understand your mental health and provide you guidance towards seeking professional care.</p>
-        </div>
-    </section>
+<div class="q-page">
 
-    <div id="assessment-area">
-        <section class="curve-sep">
-            <h2>Mental Health Scope Audit</h2>
-            <p>Please note: This tool is for guidance. Answer honestly for the most accurate scope report.</p>
-        </section>
+  <!-- HERO -->
+  <div class="q-hero">
+    <div class="q-hero-title">Mental Health Assessment</div>
+    <p class="q-hero-sub">15 questions · ~5 minutes · 100% private. Answer honestly for the most accurate report.</p>
+  </div>
 
-        <div class="container">
-            <div id="quiz-flow">
-                <div class="q-step active" id="s1">
-                    <div class="q-card">
-                        <span style="color:var(--primary); font-weight:800;">QUESTION 01 — ENERGY</span>
-                        <h3 style="margin:15px 0 30px; font-size:24px;">How is your energy level today?</h3>
-                        <button class="opt-btn" onclick="next(1, 'energy', 10)">High & Productive</button>
-                        <button class="opt-btn" onclick="next(1, 'energy', 5)">Moderate / Fluctuating</button>
-                        <button class="opt-btn" onclick="next(1, 'energy', 1)">Very Low / Exhausted</button>
-                    </div>
-                </div>
-
-                <div class="q-step" id="s2">
-                    <div class="q-card">
-                        <span style="color:var(--primary); font-weight:800;">QUESTION 02 — SLEEP</span>
-                        <h3 style="margin:15px 0 30px; font-size:24px;">How would you rate your sleep quality?</h3>
-                        <button class="opt-btn" onclick="next(2, 'sleep', 10)">Deep & Restful</button>
-                        <button class="opt-btn" onclick="next(2, 'sleep', 5)">Interrupted / Hard to fall asleep</button>
-                        <button class="opt-btn" onclick="next(2, 'sleep', 1)">Poor / Significant Insomnia</button>
-                    </div>
-                </div>
-
-                <div class="q-step" id="s3">
-                    <div class="q-card">
-                        <span style="color:var(--primary); font-weight:800;">QUESTION 03 — STRESS</span>
-                        <h3 style="margin:15px 0 30px; font-size:24px;">How often do you feel overwhelmed by daily tasks?</h3>
-                        <button class="opt-btn" onclick="next(3, 'stress', 10)">Rarely or Never</button>
-                        <button class="opt-btn" onclick="next(3, 'stress', 5)">Occasionally</button>
-                        <button class="opt-btn" onclick="next(3, 'stress', 1)">Nearly every day</button>
-                    </div>
-                </div>
-
-                <div class="q-step" id="s4">
-                    <div class="q-card">
-                        <span style="color:var(--primary); font-weight:800;">QUESTION 04 — ENERGY</span>
-                        <h3 style="margin:15px 0 30px; font-size:24px;">Do you find it difficult to start your day?</h3>
-                        <button class="opt-btn" onclick="next(4, 'energy', 10)">No, I feel ready</button>
-                        <button class="opt-btn" onclick="next(4, 'energy', 5)">Sometimes I struggle</button>
-                        <button class="opt-btn" onclick="next(4, 'energy', 1)">Yes, it is very difficult</button>
-                    </div>
-                </div>
-
-                <div class="q-step" id="s5">
-                    <div class="q-card">
-                        <span style="color:var(--primary); font-weight:800;">QUESTION 05 — STRESS</span>
-                        <h3 style="margin:15px 0 30px; font-size:24px;">How is your ability to concentrate?</h3>
-                        <button class="opt-btn" onclick="next(5, 'stress', 10)">Sharp and focused</button>
-                        <button class="opt-btn" onclick="next(5, 'stress', 5)">Easily distracted</button>
-                        <button class="opt-btn" onclick="next(5, 'stress', 1)">Cannot focus at all</button>
-                    </div>
-                </div>
-
-                <div class="q-step" id="s6">
-                    <div class="q-card">
-                        <span style="color:var(--primary); font-weight:800;">QUESTION 06 — SLEEP</span>
-                        <h3 style="margin:15px 0 30px; font-size:24px;">Do you feel rested when you wake up?</h3>
-                        <button class="opt-btn" onclick="next(6, 'sleep', 10)">Always</button>
-                        <button class="opt-btn" onclick="next(6, 'sleep', 5)">Rarely</button>
-                        <button class="opt-btn" onclick="next(6, 'sleep', 1)">Never</button>
-                    </div>
-                </div>
-
-                <div class="q-step" id="s7">
-                    <div class="q-card">
-                        <span style="color:var(--primary); font-weight:800;">QUESTION 07 — STRESS</span>
-                        <h3 style="margin:15px 0 30px; font-size:24px;">Do you feel anxious about future events?</h3>
-                        <button class="opt-btn" onclick="next(7, 'stress', 10)">Not at all</button>
-                        <button class="opt-btn" onclick="next(7, 'stress', 5)">Somewhat anxious</button>
-                        <button class="opt-btn" onclick="next(7, 'stress', 1)">Constantly worried</button>
-                    </div>
-                </div>
-
-                <div class="q-step" id="s8">
-                    <div class="q-card">
-                        <span style="color:var(--primary); font-weight:800;">QUESTION 08 — ENERGY</span>
-                        <h3 style="margin:15px 0 30px; font-size:24px;">Do you experience physical fatigue?</h3>
-                        <button class="opt-btn" onclick="next(8, 'energy', 10)">Never</button>
-                        <button class="opt-btn" onclick="next(8, 'energy', 5)">After work</button>
-                        <button class="opt-btn" onclick="next(8, 'energy', 1)">Even after resting</button>
-                    </div>
-                </div>
-
-                <div class="q-step" id="s9">
-                    <div class="q-card">
-                        <span style="color:var(--primary); font-weight:800;">QUESTION 09 — STRESS</span>
-                        <h3 style="margin:15px 0 30px; font-size:24px;">How is your appetite lately?</h3>
-                        <button class="opt-btn" onclick="next(9, 'stress', 10)">Normal</button>
-                        <button class="opt-btn" onclick="next(9, 'stress', 5)">Increased significantly</button>
-                        <button class="opt-btn" onclick="next(9, 'stress', 1)">Loss of appetite</button>
-                    </div>
-                </div>
-
-                <div class="q-step" id="s10">
-                    <div class="q-card">
-                        <span style="color:var(--primary); font-weight:800;">QUESTION 10 — SLEEP</span>
-                        <h3 style="margin:15px 0 30px; font-size:24px;">Do you use sleep aids or medication?</h3>
-                        <button class="opt-btn" onclick="next(10, 'sleep', 10)">No, never</button>
-                        <button class="opt-btn" onclick="next(10, 'sleep', 5)">Occasionally</button>
-                        <button class="opt-btn" onclick="next(10, 'sleep', 1)">Yes, regularly</button>
-                    </div>
-                </div>
-
-                <div class="q-step" id="s11">
-                    <div class="q-card">
-                        <span style="color:var(--primary); font-weight:800;">QUESTION 11 — ENERGY</span>
-                        <h3 style="margin:15px 0 30px; font-size:24px;">Do you feel motivated to pursue hobbies?</h3>
-                        <button class="opt-btn" onclick="next(11, 'energy', 10)">Very motivated</button>
-                        <button class="opt-btn" onclick="next(11, 'energy', 5)">Losing interest</button>
-                        <button class="opt-btn" onclick="next(11, 'energy', 1)">No interest at all</button>
-                    </div>
-                </div>
-
-                <div class="q-step" id="s12">
-                    <div class="q-card">
-                        <span style="color:var(--primary); font-weight:800;">QUESTION 12 — STRESS</span>
-                        <h3 style="margin:15px 0 30px; font-size:24px;">How is your social interaction?</h3>
-                        <button class="opt-btn" onclick="next(12, 'stress', 10)">Enjoyable and frequent</button>
-                        <button class="opt-btn" onclick="next(12, 'stress', 5)">Avoiding people</button>
-                        <button class="opt-btn" onclick="next(12, 'stress', 1)">Complete isolation</button>
-                    </div>
-                </div>
-
-                <div class="q-step" id="s13">
-                    <div class="q-card">
-                        <span style="color:var(--primary); font-weight:800;">QUESTION 13 — SLEEP</span>
-                        <h3 style="margin:15px 0 30px; font-size:24px;">Do you experience bad dreams?</h3>
-                        <button class="opt-btn" onclick="next(13, 'sleep', 10)">Never</button>
-                        <button class="opt-btn" onclick="next(13, 'sleep', 5)">Occasionally</button>
-                        <button class="opt-btn" onclick="next(13, 'sleep', 1)">Frequently</button>
-                    </div>
-                </div>
-
-                <div class="q-step" id="s14">
-                    <div class="q-card">
-                        <span style="color:var(--primary); font-weight:800;">QUESTION 14 — STRESS</span>
-                        <h3 style="margin:15px 0 30px; font-size:24px;">Do you feel restless or on edge?</h3>
-                        <button class="opt-btn" onclick="next(14, 'stress', 10)">Calm</button>
-                        <button class="opt-btn" onclick="next(14, 'stress', 5)">Irritable</button>
-                        <button class="opt-btn" onclick="next(14, 'stress', 1)">Highly agitated</button>
-                    </div>
-                </div>
-
-                <div class="q-step" id="s15">
-                    <div class="q-card">
-                        <span style="color:var(--primary); font-weight:800;">FINAL STEP</span>
-                        <h3 style="margin:15px 0 30px; font-size:24px;">Are you ready to calculate your scope?</h3>
-                        <button class="opt-btn" style="background:var(--primary); color:white; text-align:center;" onclick="generateReport()">FINISH AUDIT & VIEW REPORT</button>
-                    </div>
-                </div>
-            </div>
-
-            <div id="report-screen">
-                <div class="report-header">
-                    <div class="score-circle" id="total-score">0</div>
-                    <h2 id="final-title">Clinical Scope Report</h2>
-                    <p id="final-subtitle">Comprehensive breakdown of your mental wellness markers.</p>
-                </div>
-
-                <div class="report-grid">
-                    <div class="report-item">
-                        <h5>Energy Level</h5>
-                        <p id="res-energy">Metric processing...</p>
-                    </div>
-                    <div class="report-item">
-                        <h5>Sleep Metric</h5>
-                        <p id="res-sleep">Metric processing...</p>
-                    </div>
-                    <div class="report-item">
-                        <h5>Stress Load</h5>
-                        <p id="res-stress">Metric processing...</p>
-                    </div>
-                    <div class="report-item">
-                        <h5>Final Guidance</h5>
-                        <p id="res-guide">Seeking professional care is advised.</p>
-                    </div>
-                </div>
-                <button class="opt-btn" style="margin-top:40px; text-align:center;" onclick="location.reload()">Reset Assessment</button>
-            </div>
-        </div>
+  <!-- PROGRESS -->
+  <div class="q-progress-wrap">
+    <div class="q-progress-header">
+      <span class="q-progress-label">Progress</span>
+      <span class="q-progress-count" id="progressCount">1 / 15</span>
     </div>
+    <div class="q-progress-track">
+      <div class="q-progress-fill" id="progressFill" style="width: 6.67%"></div>
+    </div>
+  </div>
 
-    <footer>
-        <div class="footer-grid">
-            <div class="f-col" id="about">
-                <h4>About MindGuard</h4>
-                <p>MindGuard provides professional online screening tools to help individuals evaluate their mental health scope and find guided pathways toward wellness.</p>
-            </div>
-            <div class="f-col" id="faq">
-                <h4>FAQ</h4>
-                <a href="#">Is my data confidential?</a>
-                <a href="#">How often should I audit?</a>
-                <a href="#">Who reviews the results?</a>
-            </div>
-            <div class="f-col" id="services">
-                <h4>Our Services</h4>
-                <a href="#">Scope Auditing</a>
-                <a href="#">Therapy Matching</a>
-                <a href="#">Wellness Guidance</a>
-            </div>
-            <div class="f-col">
-                <h4>Support</h4>
-                <p>Email: support@mindguard.com</p>
-                <p>Hotline: 988 (Crisis Care)</p>
-            </div>
-        </div>
-    </footer>
+  <!-- QUESTION AREA -->
+  <div class="q-wrap">
+    <form id="quizForm" action="/result" method="POST">
 
-    <script>
-        // Scoring categories
-        let scores = { energy: 0, sleep: 0, stress: 0, total: 0 };
+      <!-- All 15 questions rendered, shown one at a time via JS -->
+      <div class="q-card" id="qCard">
+        <div class="q-category" id="qCategory">Energy</div>
+        <h2 class="q-question" id="qQuestion">How is your energy level today?</h2>
+        <div class="q-options" id="qOptions"></div>
+      </div>
 
-        function revealTest() {
-            document.getElementById('assessment-area').style.display = 'block';
-            document.getElementById('assessment-area').scrollIntoView({ behavior: 'smooth' });
-        }
+      <!-- Hidden inputs to collect answers -->
+      <div id="hiddenInputs"></div>
 
-        function next(curr, category, val) {
-            scores[category] += val;
-            scores.total += val;
-            
-            document.getElementById(`s${curr}`).classList.remove('active');
-            let nextStep = curr + 1;
-            if(document.getElementById(`s${nextStep}`)) {
-                document.getElementById(`s${nextStep}`).classList.add('active');
-            }
-        }
+    </form>
+  </div>
 
-        function generateReport() {
-            document.getElementById('quiz-flow').style.display = 'none';
-            document.getElementById('report-screen').style.display = 'block';
-            document.getElementById('total-score').innerText = scores.total;
+</div>
 
-            // Logic for specific results
-            document.getElementById('res-energy').innerText = scores.energy > 20 ? "High vitality and stable recovery patterns." : "Patterns of chronic fatigue detected.";
-            document.getElementById('res-sleep').innerText = scores.sleep > 20 ? "Restorative sleep cycles." : "Significant sleep disruption identified.";
-            document.getElementById('res-stress').innerText = scores.stress > 30 ? "Stress levels within manageable range." : "High levels of cognitive and emotional pressure.";
-            
-            if(scores.total > 100) {
-                document.getElementById('final-title').innerText = "Optimal Wellness Scope";
-                document.getElementById('res-guide').innerText = "Maintenance and regular self-care recommended.";
-            } else {
-                document.getElementById('final-title').innerText = "Attention Recommended";
-                document.getElementById('res-guide').innerText = "Consider seeking guidance from a certified healthcare provider.";
-            }
-        }
-    </script>
+<script>
+  const questions = [
+    { num: 1,  cat: 'Energy',    key: 'q1',  text: 'How is your energy level today?',
+      opts: [['High & Productive', 10], ['Moderate / Fluctuating', 5], ['Very Low / Exhausted', 1]] },
+    { num: 2,  cat: 'Sleep',     key: 'q2',  text: 'How would you rate your sleep quality?',
+      opts: [['Deep & Restful', 10], ['Interrupted / Hard to fall asleep', 5], ['Poor / Significant Insomnia', 1]] },
+    { num: 3,  cat: 'Stress',    key: 'q3',  text: 'How often do you feel overwhelmed by daily tasks?',
+      opts: [['Rarely or Never', 10], ['Occasionally', 5], ['Nearly every day', 1]] },
+    { num: 4,  cat: 'Energy',    key: 'q4',  text: 'Do you find it difficult to start your day?',
+      opts: [['No, I feel ready', 10], ['Sometimes I struggle', 5], ['Yes, it is very difficult', 1]] },
+    { num: 5,  cat: 'Cognitive', key: 'q5',  text: 'How is your ability to concentrate?',
+      opts: [['Sharp and focused', 10], ['Easily distracted', 5], ['Cannot focus at all', 1]] },
+    { num: 6,  cat: 'Sleep',     key: 'q6',  text: 'Do you feel rested when you wake up?',
+      opts: [['Always', 10], ['Rarely', 5], ['Never', 1]] },
+    { num: 7,  cat: 'Stress',    key: 'q7',  text: 'Do you feel anxious about future events?',
+      opts: [['Not at all', 10], ['Somewhat anxious', 5], ['Constantly worried', 1]] },
+    { num: 8,  cat: 'Energy',    key: 'q8',  text: 'Do you experience physical fatigue?',
+      opts: [['Never', 10], ['After work', 5], ['Even after resting', 1]] },
+    { num: 9,  cat: 'Emotional', key: 'q9',  text: 'How is your appetite lately?',
+      opts: [['Normal', 10], ['Increased significantly', 5], ['Loss of appetite', 1]] },
+    { num: 10, cat: 'Sleep',     key: 'q10', text: 'Do you use sleep aids or medication?',
+      opts: [['No, never', 10], ['Occasionally', 5], ['Yes, regularly', 1]] },
+    { num: 11, cat: 'Emotional', key: 'q11', text: 'Do you feel motivated to pursue hobbies?',
+      opts: [['Very motivated', 10], ['Losing interest', 5], ['No interest at all', 1]] },
+    { num: 12, cat: 'Emotional', key: 'q12', text: 'How is your social interaction?',
+      opts: [['Enjoyable and frequent', 10], ['Avoiding people', 5], ['Complete isolation', 1]] },
+    { num: 13, cat: 'Sleep',     key: 'q13', text: 'Do you experience bad dreams?',
+      opts: [['Never', 10], ['Occasionally', 5], ['Frequently', 1]] },
+    { num: 14, cat: 'Stress',    key: 'q14', text: 'Do you feel restless or on edge?',
+      opts: [['Calm', 10], ['Irritable', 5], ['Highly agitated', 1]] },
+    { num: 15, cat: 'Cognitive', key: 'q15', text: 'Can you make decisions easily?',
+      opts: [['Yes, clearly', 10], ['Sometimes difficult', 5], ['Very hard to decide', 1]] },
+  ];
+
+  const catColors = {
+    'Energy':    '#0ee6b7',
+    'Sleep':     '#818cf8',
+    'Stress':    '#f59e0b',
+    'Cognitive': '#38bdf8',
+    'Emotional': '#f472b6',
+  };
+
+  let current = 0;
+  const answers = {};
+
+  function renderQuestion(idx) {
+    const q = questions[idx];
+    const total = questions.length;
+
+    // Update progress
+    document.getElementById('progressCount').textContent = `${idx + 1} / ${total}`;
+    document.getElementById('progressFill').style.width = `${((idx + 1) / total) * 100}%`;
+
+    // Update card
+    const catEl = document.getElementById('qCategory');
+    catEl.textContent = q.cat;
+    catEl.style.color = catColors[q.cat] || 'var(--brand)';
+    catEl.style.background = (catColors[q.cat] || 'var(--brand)') + '15';
+    catEl.style.borderColor = (catColors[q.cat] || 'var(--brand)') + '30';
+
+    document.getElementById('qQuestion').textContent = q.text;
+
+    const optWrap = document.getElementById('qOptions');
+    optWrap.innerHTML = '';
+
+    q.opts.forEach(([label, val]) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'q-opt';
+      btn.innerHTML = `<span class="q-opt-dot"></span>${label}`;
+      btn.onclick = () => selectAnswer(q.key, val, btn);
+      optWrap.appendChild(btn);
+    });
+
+    // Animate card
+    const card = document.getElementById('qCard');
+    card.style.animation = 'none';
+    void card.offsetWidth;
+    card.style.animation = 'slideUp 0.45s cubic-bezier(0.4,0,0.2,1)';
+  }
+
+  function selectAnswer(key, val, btn) {
+    answers[key] = val;
+
+    // Visual feedback
+    btn.style.borderColor = 'var(--brand)';
+    btn.style.background = 'var(--brand-soft)';
+    btn.querySelector('.q-opt-dot').style.background = 'var(--brand)';
+
+    setTimeout(() => {
+      if (current < questions.length - 1) {
+        current++;
+        renderQuestion(current);
+      } else {
+        submitForm();
+      }
+    }, 280);
+  }
+
+  function submitForm() {
+    const hiddenInputs = document.getElementById('hiddenInputs');
+    hiddenInputs.innerHTML = '';
+
+    Object.entries(answers).forEach(([key, val]) => {
+      const inp = document.createElement('input');
+      inp.type = 'hidden';
+      inp.name = key;
+      inp.value = val;
+      hiddenInputs.appendChild(inp);
+    });
+
+    // Fill any missing questions with default 5
+    questions.forEach(q => {
+      if (!(q.key in answers)) {
+        const inp = document.createElement('input');
+        inp.type = 'hidden';
+        inp.name = q.key;
+        inp.value = 5;
+        hiddenInputs.appendChild(inp);
+      }
+    });
+
+    // Show loading state
+    document.getElementById('qCard').innerHTML = `
+      <div style="text-align:center; padding:40px 0;">
+        <div style="width:60px;height:60px;border-radius:50%;border:3px solid var(--border);border-top-color:var(--brand);animation:spin 0.8s linear infinite;margin:0 auto 24px;"></div>
+        <div class="q-hero-title" style="font-size:24px;">Generating your report…</div>
+        <p style="color:var(--text-muted); margin-top:8px;">Analysing your responses with AI</p>
+      </div>
+      <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
+    `;
+
+    setTimeout(() => {
+      document.getElementById('quizForm').submit();
+    }, 1200);
+  }
+
+  // Init
+  renderQuestion(0);
+</script>
+
 </body>
 </html>

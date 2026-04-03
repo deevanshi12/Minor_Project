@@ -1,43 +1,226 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>MindGuard Dashboard</title>
-
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MindGuard — Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-
 <body>
 
-<div class="dashboard">
+<div class="dashboard-layout">
 
-<h1>MindGuard</h1>
-<p>Welcome {{name}}. Monitor and improve your mental well-being.</p>
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">MindGuard</div>
 
-<div class="card">
-  <h2>Weekly Mood Overview</h2>
-  <canvas id="chart"></canvas>
-</div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">Overview</div>
 
-<div class="card">
-  <h2>Self Assessment</h2>
-  <p>Evaluate your mental health using a structured questionnaire.</p>
-  <a href="/questionnaire"><button>Start Assessment</button></a>
-</div>
+      <a class="sidebar-item active" href="/dashboard">
+        <svg class="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+          <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+        </svg>
+        Dashboard
+      </a>
 
-<div class="card">
-  <h2>AI Support Assistant</h2>
+      <div class="sidebar-section-label">Tools</div>
 
-  <div id="chatBox" class="chat-box"></div>
+      <a class="sidebar-item" href="/questionnaire">
+        <svg class="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/>
+          <rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/>
+        </svg>
+        Assessment
+      </a>
 
-  <input type="text" id="userInput" placeholder="Describe how you are feeling...">
-  <button onclick="sendMessage()">Send</button>
-</div>
+      <a class="sidebar-item" href="/assistant">
+        <svg class="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+        </svg>
+        Pressure Valve
+      </a>
 
+      <div class="sidebar-section-label">Account</div>
+
+      <a class="sidebar-item" href="/">
+        <svg class="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+        </svg>
+        Sign Out
+      </a>
+    </nav>
+
+    <div class="sidebar-user">
+      <div class="sidebar-avatar" id="avatarInitial">?</div>
+      <div class="sidebar-user-info">
+        <div class="sidebar-user-name" id="sidebarName" data-username="{{ name }}">{{ name }}</div>
+        <div class="sidebar-user-role">Student</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="dashboard-main">
+
+    <!-- Header -->
+    <div class="dashboard-header">
+      <div>
+        <h1 class="dash-title">Good to see you, {{ name }} 👋</h1>
+        <p class="dash-subtitle">Here's your mental wellness overview for today.</p>
+      </div>
+      <div class="dash-date" id="dashDate"></div>
+    </div>
+
+    <!-- Stats Row -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-card-label">Resilience Score</div>
+        <div class="stat-card-val">74</div>
+        <div class="stat-card-sub">Out of 100</div>
+        <div class="stat-card-badge badge-up">↑ +6 this week</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-label">Sessions Done</div>
+        <div class="stat-card-val">3</div>
+        <div class="stat-card-sub">This month</div>
+        <div class="stat-card-badge badge-neutral">On track</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-label">Risk Level</div>
+        <div class="stat-card-val" style="color:#f59e0b;">Low</div>
+        <div class="stat-card-sub">Based on last assessment</div>
+        <div class="stat-card-badge badge-up">Stable</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-label">Streak</div>
+        <div class="stat-card-val">7</div>
+        <div class="stat-card-sub">Days active</div>
+        <div class="stat-card-badge badge-up">🔥 Keep going</div>
+      </div>
+    </div>
+
+    <!-- Content Grid -->
+    <div class="content-grid">
+
+      <!-- Mood Chart -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Weekly Mood Overview</span>
+          <span class="card-badge">Last 7 days</span>
+        </div>
+        <div class="mood-chart-wrap">
+          <canvas id="moodChart"></canvas>
+        </div>
+      </div>
+
+      <!-- AI Chat -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">AI Support</span>
+          <span class="card-badge" style="background:rgba(16,185,129,0.1);color:#10b981;border-color:rgba(16,185,129,0.2);">● Online</span>
+        </div>
+        <div class="chat-box" id="chatBox"></div>
+        <div class="chat-input-row">
+          <input
+            class="chat-input"
+            id="userInput"
+            placeholder="How are you feeling today…"
+            autocomplete="off"
+          >
+          <button class="chat-send" onclick="sendMessage()" title="Send">
+            <svg viewBox="0 0 24 24"><path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Second Row -->
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px;">
+
+      <!-- Assessment CTA -->
+      <div class="card assess-card">
+        <div class="assess-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#060b14" stroke-width="2.5">
+            <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/>
+            <rect x="9" y="3" width="6" height="4" rx="1"/>
+            <path d="M9 12h6M9 16h4"/>
+          </svg>
+        </div>
+        <div class="card-title" style="font-size:20px; margin-bottom:10px;">Mental Health Assessment</div>
+        <p style="color:var(--text-muted); font-size:14px; line-height:1.6;">
+          Take our structured 15-question clinical audit to get your detailed resilience report with AI-powered insights.
+        </p>
+        <a href="/questionnaire" class="btn-assess">
+          Start Assessment
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </a>
+      </div>
+
+      <!-- Mood history -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Mood History</span>
+          <span class="card-badge">This week</span>
+        </div>
+        <div class="mood-entries">
+          <div class="mood-entry">
+            <span class="mood-entry-label">
+              <span class="mood-dot" style="background:#10b981;"></span>
+              Monday
+            </span>
+            <span class="mood-score" style="color:#10b981;">88</span>
+          </div>
+          <div class="mood-entry">
+            <span class="mood-entry-label">
+              <span class="mood-dot" style="background:#0ee6b7;"></span>
+              Tuesday
+            </span>
+            <span class="mood-score" style="color:#0ee6b7;">74</span>
+          </div>
+          <div class="mood-entry">
+            <span class="mood-entry-label">
+              <span class="mood-dot" style="background:#f59e0b;"></span>
+              Wednesday
+            </span>
+            <span class="mood-score" style="color:#f59e0b;">58</span>
+          </div>
+          <div class="mood-entry">
+            <span class="mood-entry-label">
+              <span class="mood-dot" style="background:#10b981;"></span>
+              Thursday
+            </span>
+            <span class="mood-score" style="color:#10b981;">80</span>
+          </div>
+          <div class="mood-entry">
+            <span class="mood-entry-label">
+              <span class="mood-dot" style="background:#0ee6b7;"></span>
+              Today
+            </span>
+            <span class="mood-score" style="color:#0ee6b7;">70</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
 </div>
 
 <script src="{{ url_for('static', filename='app.js') }}"></script>
+<script>
+  // Set avatar initial from name
+  const name = document.getElementById('sidebarName')?.textContent?.trim();
+  if (name) {
+    const avatarEl = document.getElementById('avatarInitial');
+    if (avatarEl) avatarEl.textContent = name.charAt(0).toUpperCase();
+  }
+</script>
 
 </body>
 </html>
