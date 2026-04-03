@@ -155,7 +155,7 @@
       z-index: 5;
     }
 
-    /* Shatter animation */
+   /* Shatter animation */
     @keyframes shatterWord {
       0% { filter: blur(0px); opacity: 1; }
       50% { filter: blur(8px); opacity: 0.3; }
@@ -278,7 +278,7 @@
 </div>
 
 <script>
-  // ── PARTICLE ENGINE ──────────────────────────────────
+  // PARTICLE ENGINE
   const canvas  = document.getElementById('particleCanvas');
   const ctx     = canvas.getContext('2d');
   let particles = [];
@@ -348,13 +348,13 @@
 
   animate();
 
-  // ── CHAR COUNT ──────────────────────────────────────
+  // CHAR COUNT
   function updateCount() {
     const len = document.getElementById('ventInput').value.length;
     document.getElementById('charCount').textContent = `${len} / 1000`;
   }
 
-  // ── SHATTER ─────────────────────────────────────────
+  // SHATTER
   function shatterEverything() {
     const input = document.getElementById('ventInput');
     const text  = input.value.trim();
