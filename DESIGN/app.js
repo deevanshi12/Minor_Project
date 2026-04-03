@@ -1,4 +1,4 @@
-// ── MOOD CHART ──────────────────────────────
+// MOOD CHART
 function initMoodChart() {
   const canvas = document.getElementById('moodChart');
   if (!canvas) return;
@@ -68,7 +68,7 @@ function initMoodChart() {
   });
 }
 
-// ── AI CHAT ──────────────────────────────────
+// AI CHAT
 const chatBox   = document.getElementById('chatBox');
 const userInput = document.getElementById('userInput');
 
