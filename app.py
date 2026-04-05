@@ -5,8 +5,8 @@ from flask import Flask, render_template, request, jsonify
 
 # Absolute path to ensure Flask finds folders correctly
 base_dir = os.path.dirname(os.path.abspath(__file__))
-template_dir = os.path.join(base_dir, 'STRUCTURE')
-static_dir   = os.path.join(base_dir, 'DESIGN')
+template_dir = os.path.join(base_dir, 'templates')
+static_dir   = os.path.join(base_dir, 'static')
 
 app = Flask(__name__, template_folder=template_dir, static_folder=static_dir)
 
