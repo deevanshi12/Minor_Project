@@ -9,8 +9,8 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  
-<div class="dashboard-layout">
+
+
 
   <!-- SIDEBAR -->
   <aside class="sidebar">
@@ -28,6 +28,16 @@
       </a>
 
       <div class="sidebar-section-label">Tools</div>
+
+      <a class="sidebar-item" href="/mood">
+        <svg class="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M8 13s1.5 2 4 2 4-2 4-2"/>
+          <line x1="9" y1="9" x2="9.01" y2="9"/>
+          <line x1="15" y1="9" x2="15.01" y2="9"/>
+        </svg>
+        Mood Check-in
+      </a>
 
       <a class="sidebar-item" href="/questionnaire">
         <svg class="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -79,27 +89,60 @@
     <div class="stats-row">
       <div class="stat-card">
         <div class="stat-card-label">Resilience Score</div>
-        <div class="stat-card-val">74</div>
-        <div class="stat-card-sub">Out of 100</div>
-        <div class="stat-card-badge badge-up">↑ +6 this week</div>
+        {% if resilience %}
+          <div class="stat-card-val">{{ resilience }}</div>
+          <div class="stat-card-sub">Out of 100</div>
+          <div class="stat-card-badge badge-up">✓ Assessment done</div>
+        {% else %}
+          <div class="stat-card-val" style="color:var(--text-dim);">—</div>
+          <div class="stat-card-sub">Take assessment first</div>
+          <div class="stat-card-badge badge-neutral">
+            <a href="/questionnaire" style="color:inherit;text-decoration:none;">Start now →</a>
+          </div>
+        {% endif %}
       </div>
+
       <div class="stat-card">
         <div class="stat-card-label">Sessions Done</div>
-        <div class="stat-card-val">3</div>
-        <div class="stat-card-sub">This month</div>
-        <div class="stat-card-badge badge-neutral">On track</div>
+        <div class="stat-card-val">{{ sessions }}</div>
+        <div class="stat-card-sub">This session</div>
+        {% if sessions > 0 %}
+          <div class="stat-card-badge badge-up">↑ Keep going</div>
+        {% else %}
+          <div class="stat-card-badge badge-neutral">No sessions yet</div>
+        {% endif %}
       </div>
+
       <div class="stat-card">
         <div class="stat-card-label">Risk Level</div>
-        <div class="stat-card-val" style="color:#f59e0b;">Low</div>
-        <div class="stat-card-sub">Based on last assessment</div>
-        <div class="stat-card-badge badge-up">Stable</div>
+        {% if risk %}
+          {% if risk == "Low" %}
+            <div class="stat-card-val" style="color:#10b981;">{{ risk }}</div>
+            <div class="stat-card-badge badge-up">Stable</div>
+          {% elif risk == "Moderate" %}
+            <div class="stat-card-val" style="color:#f59e0b;">{{ risk }}</div>
+            <div class="stat-card-badge badge-neutral">Monitor</div>
+          {% else %}
+            <div class="stat-card-val" style="color:#ef4444;">{{ risk }}</div>
+            <div class="stat-card-badge badge-down">Needs attention</div>
+          {% endif %}
+          <div class="stat-card-sub">Based on assessment</div>
+        {% else %}
+          <div class="stat-card-val" style="color:var(--text-dim);">—</div>
+          <div class="stat-card-sub">Complete assessment</div>
+          <div class="stat-card-badge badge-neutral">Pending</div>
+        {% endif %}
       </div>
+
       <div class="stat-card">
         <div class="stat-card-label">Streak</div>
-        <div class="stat-card-val">7</div>
+        <div class="stat-card-val">{{ streak }}</div>
         <div class="stat-card-sub">Days active</div>
-        <div class="stat-card-badge badge-up">🔥 Keep going</div>
+        {% if streak > 0 %}
+          <div class="stat-card-badge badge-up">🔥 Keep going</div>
+        {% else %}
+          <div class="stat-card-badge badge-neutral">Start today!</div>
+        {% endif %}
       </div>
     </div>
 
@@ -166,51 +209,154 @@
       <div class="card">
         <div class="card-header">
           <span class="card-title">Mood History</span>
-          <span class="card-badge">This week</span>
+          <span class="card-badge">Today</span>
         </div>
+        {% if mood_today %}
+        <div style="display:flex; align-items:center; gap:16px; padding:16px; background:var(--bg-elevated); border-radius:16px; margin-bottom:12px; border:1px solid var(--border-brand);">
+          <span style="font-size:40px;">{{ mood_today.emoji }}</span>
+          <div>
+            <div style="font-family:'Syne',sans-serif; font-weight:700; font-size:16px; color:{{ mood_today.color }};">{{ mood_today.label }}</div>
+            <div style="font-size:12px; color:var(--text-muted);">Today's mood · Score {{ mood_today.score }}</div>
+          </div>
+        </div>
+        {% else %}
+        <div style="text-align:center; padding:24px; color:var(--text-dim);">
+          <div style="font-size:36px; margin-bottom:10px;">😶</div>
+          <div style="font-size:13px;">No mood logged today</div>
+          <a href="/mood" style="display:inline-block; margin-top:12px; font-size:13px; color:var(--brand); text-decoration:none; font-weight:600;">Log your mood →</a>
+        </div>
+        {% endif %}
         <div class="mood-entries">
           <div class="mood-entry">
-            <span class="mood-entry-label">
-              <span class="mood-dot" style="background:#10b981;"></span>
-              Monday
-            </span>
-            <span class="mood-score" style="color:#10b981;">88</span>
+            <span class="mood-entry-label"><span class="mood-dot" style="background:#10b981;"></span>Monday</span>
+            <span class="mood-score" style="color:#10b981;">😄</span>
           </div>
           <div class="mood-entry">
-            <span class="mood-entry-label">
-              <span class="mood-dot" style="background:#0ee6b7;"></span>
-              Tuesday
-            </span>
-            <span class="mood-score" style="color:#0ee6b7;">74</span>
+            <span class="mood-entry-label"><span class="mood-dot" style="background:#0ee6b7;"></span>Tuesday</span>
+            <span class="mood-score" style="color:#0ee6b7;">🙂</span>
           </div>
           <div class="mood-entry">
-            <span class="mood-entry-label">
-              <span class="mood-dot" style="background:#f59e0b;"></span>
-              Wednesday
-            </span>
-            <span class="mood-score" style="color:#f59e0b;">58</span>
-          </div>
-          <div class="mood-entry">
-            <span class="mood-entry-label">
-              <span class="mood-dot" style="background:#10b981;"></span>
-              Thursday
-            </span>
-            <span class="mood-score" style="color:#10b981;">80</span>
-          </div>
-          <div class="mood-entry">
-            <span class="mood-entry-label">
-              <span class="mood-dot" style="background:#0ee6b7;"></span>
-              Today
-            </span>
-            <span class="mood-score" style="color:#0ee6b7;">70</span>
+            <span class="mood-entry-label"><span class="mood-dot" style="background:#f59e0b;"></span>Wednesday</span>
+            <span class="mood-score" style="color:#f59e0b;">😐</span>
           </div>
         </div>
       </div>
 
     </div>
 
+    <!-- DAILY MOOD CHECK-IN -->
+    <div class="card" style="margin-top:24px;" id="moodCheckinCard">
+      <div class="card-header">
+        <span class="card-title">How are you feeling right now?</span>
+        <span class="card-badge" id="moodCheckinBadge">Daily Check-in</span>
+      </div>
+
+      <div id="moodSelectArea">
+        <p style="color:var(--text-muted); font-size:14px; margin-bottom:24px;">Select the emoji that best describes your current mood.</p>
+
+        <div style="display:flex; gap:12px; flex-wrap:wrap;">
+          <!-- Each emoji mood option -->
+          <button class="mood-emoji-btn" onclick="selectMood(this, '😄', 95, '#10b981', 'Excellent')" title="Excellent">
+            <span class="mood-emoji">😄</span>
+            <span class="mood-emoji-label">Excellent</span>
+          </button>
+          <button class="mood-emoji-btn" onclick="selectMood(this, '🙂', 75, '#0ee6b7', 'Good')" title="Good">
+            <span class="mood-emoji">🙂</span>
+            <span class="mood-emoji-label">Good</span>
+          </button>
+          <button class="mood-emoji-btn" onclick="selectMood(this, '😐', 50, '#f59e0b', 'Neutral')" title="Neutral">
+            <span class="mood-emoji">😐</span>
+            <span class="mood-emoji-label">Neutral</span>
+          </button>
+          <button class="mood-emoji-btn" onclick="selectMood(this, '😔', 30, '#f97316', 'Low')" title="Low">
+            <span class="mood-emoji">😔</span>
+            <span class="mood-emoji-label">Low</span>
+          </button>
+          <button class="mood-emoji-btn" onclick="selectMood(this, '😢', 15, '#ef4444', 'Sad')" title="Sad">
+            <span class="mood-emoji">😢</span>
+            <span class="mood-emoji-label">Sad</span>
+          </button>
+          <button class="mood-emoji-btn" onclick="selectMood(this, '😤', 20, '#8b5cf6', 'Angry')" title="Angry">
+            <span class="mood-emoji">😤</span>
+            <span class="mood-emoji-label">Angry</span>
+          </button>
+          <button class="mood-emoji-btn" onclick="selectMood(this, '😰', 10, '#f43f5e', 'Anxious')" title="Anxious">
+            <span class="mood-emoji">😰</span>
+            <span class="mood-emoji-label">Anxious</span>
+          </button>
+          <button class="mood-emoji-btn" onclick="selectMood(this, '🤩', 100, '#0ee6b7', 'Amazing')" title="Amazing">
+            <span class="mood-emoji">🤩</span>
+            <span class="mood-emoji-label">Amazing</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- After selection — confirmation -->
+      <div id="moodConfirmed" style="display:none; align-items:center; gap:20px; padding:20px 0;">
+        <div id="moodConfirmedEmoji" style="font-size:56px; line-height:1;"></div>
+        <div>
+          <div style="font-family:'Syne',sans-serif; font-size:20px; font-weight:700;" id="moodConfirmedLabel"></div>
+          <div style="color:var(--text-muted); font-size:13px; margin-top:4px;" id="moodConfirmedTime"></div>
+          <button onclick="resetMood()" style="margin-top:12px; background:transparent; border:1px solid var(--border); color:var(--text-muted); padding:6px 16px; border-radius:20px; cursor:pointer; font-size:12px; transition:all 0.3s ease;" onmouseover="this.style.borderColor='var(--brand)';this.style.color='var(--brand)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-muted)'">
+            Change mood
+          </button>
+        </div>
+      </div>
+    </div>
+
   </main>
 </div>
+
+<style>
+.mood-emoji-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 20px;
+  background: var(--bg-elevated);
+  border: 2px solid var(--border);
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+  min-width: 80px;
+  flex: 1;
+}
+
+.mood-emoji-btn:hover {
+  border-color: var(--brand);
+  background: var(--brand-soft);
+  transform: translateY(-6px) scale(1.05);
+  box-shadow: 0 12px 32px rgba(14,230,183,0.15);
+}
+
+.mood-emoji-btn.selected {
+  border-color: var(--selected-color, var(--brand));
+  background: color-mix(in srgb, var(--selected-color, var(--brand)) 12%, transparent);
+  transform: translateY(-4px) scale(1.08);
+  box-shadow: 0 16px 40px color-mix(in srgb, var(--selected-color, var(--brand)) 30%, transparent);
+}
+
+.mood-emoji { font-size: 36px; line-height: 1; transition: transform 0.3s ease; }
+.mood-emoji-btn:hover .mood-emoji { transform: scale(1.2) rotate(-5deg); }
+.mood-emoji-btn.selected .mood-emoji { transform: scale(1.25); animation: bounceIn 0.4s ease; }
+
+.mood-emoji-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.mood-emoji-btn.selected .mood-emoji-label { color: var(--selected-color, var(--brand)); }
+
+@keyframes bounceIn {
+  0%   { transform: scale(0.8); }
+  50%  { transform: scale(1.4); }
+  100% { transform: scale(1.25); }
+}
+</style>
 
 <script src="{{ url_for('static', filename='app.js') }}"></script>
 <script>
@@ -219,6 +365,49 @@
   if (name) {
     const avatarEl = document.getElementById('avatarInitial');
     if (avatarEl) avatarEl.textContent = name.charAt(0).toUpperCase();
+  }
+
+  function selectMood(btn, emoji, score, color, label) {
+    // Remove selected from all
+    document.querySelectorAll('.mood-emoji-btn').forEach(b => {
+      b.classList.remove('selected');
+      b.style.removeProperty('--selected-color');
+    });
+
+    // Mark selected
+    btn.classList.add('selected');
+    btn.style.setProperty('--selected-color', color);
+
+    // After brief delay show confirmation
+    setTimeout(() => {
+      document.getElementById('moodSelectArea').style.display = 'none';
+      const confirmed = document.getElementById('moodConfirmed');
+      confirmed.style.display = 'flex';
+
+      document.getElementById('moodConfirmedEmoji').textContent = emoji;
+      document.getElementById('moodConfirmedLabel').textContent = `Feeling ${label} today`;
+      document.getElementById('moodConfirmedLabel').style.color = color;
+
+      const now = new Date();
+      document.getElementById('moodConfirmedTime').textContent =
+        `Logged at ${now.toLocaleTimeString('en-US', {hour:'2-digit', minute:'2-digit'})}`;
+
+      document.getElementById('moodCheckinBadge').textContent = '✓ Logged';
+      document.getElementById('moodCheckinBadge').style.background = color + '20';
+      document.getElementById('moodCheckinBadge').style.color = color;
+      document.getElementById('moodCheckinBadge').style.borderColor = color + '40';
+    }, 350);
+  }
+
+  function resetMood() {
+    document.getElementById('moodSelectArea').style.display = 'block';
+    document.getElementById('moodConfirmed').style.display = 'none';
+    document.getElementById('moodCheckinBadge').textContent = 'Daily Check-in';
+    document.getElementById('moodCheckinBadge').style = '';
+    document.querySelectorAll('.mood-emoji-btn').forEach(b => {
+      b.classList.remove('selected');
+      b.style.removeProperty('--selected-color');
+    });
   }
 </script>
 
