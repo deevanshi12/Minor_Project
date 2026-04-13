@@ -607,17 +607,25 @@
     }, 200);
   }
 
-  function submitMood() {
+  async function submitMood() {
     if (!selectedMood) return;
 
+    // Save to session via backend
+    await fetch('/save_mood', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        emoji: selectedMood.emoji,
+        label: selectedMood.name,
+        score: selectedMood.score,
+        color: selectedMood.color
+      })
+    });
+
     const note = document.getElementById('moodNote').value.trim();
-
-    // Hide form, show success
     document.getElementById('checkinSection').style.display = 'none';
-
     const success = document.getElementById('successScreen');
     success.classList.add('show');
-
     document.getElementById('successEmoji').textContent = selectedMood.emoji;
     document.getElementById('successTitle').textContent = `Feeling ${selectedMood.name}`;
     document.getElementById('successTitle').style.color = selectedMood.color;
